@@ -1,4 +1,3 @@
-/*
 package com.xy.controller;
 
 import org.springframework.boot.autoconfigure.web.ErrorController;
@@ -39,4 +38,3 @@ public class ErrorPagesController implements ErrorController {
         return PATH;
     }
 }
-*/
