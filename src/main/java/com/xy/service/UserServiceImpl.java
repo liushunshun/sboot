@@ -2,6 +2,8 @@ package com.xy.service;
 
 import com.xy.bean.Role;
 import com.xy.bean.User;
+import com.xy.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -13,14 +15,19 @@ import java.util.Optional;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public Optional<User> getUserById(long id) {
-        return Optional.ofNullable(new User(1L,"admin@163.com","$2a$10$ebyC4Z5WtCXXc.HGDc1Yoe6CLFzcntFmfse6/pTj7CeDY5I05w16C", Role.ADMIN));
+        //return Optional.ofNullable(new User(1L,"admin@163.com","$2a$10$ebyC4Z5WtCXXc.HGDc1Yoe6CLFzcntFmfse6/pTj7CeDY5I05w16C", Role.ADMIN));
+        return Optional.ofNullable(userMapper.findById(id));
     }
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return Optional.ofNullable(new User(1L,"admin@163.com","$2a$10$ebyC4Z5WtCXXc.HGDc1Yoe6CLFzcntFmfse6/pTj7CeDY5I05w16C", Role.ADMIN));
+        return Optional.ofNullable(userMapper.findByEmail(email));
 }
 
     @Override
