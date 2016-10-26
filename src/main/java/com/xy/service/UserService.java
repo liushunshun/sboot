@@ -1,6 +1,7 @@
 package com.xy.service;
 
 import com.xy.bean.User;
+import com.xy.bean.UserCreateForm;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -15,4 +16,6 @@ public interface UserService {
     Optional<User> getUserByEmail(String email);
 
     Collection<User> getAllUsers();
+
+    User create(UserCreateForm form);
 }

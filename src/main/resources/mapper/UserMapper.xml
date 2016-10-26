@@ -9,7 +9,7 @@
 		<result property="role" column="role" />
 	</resultMap>
 	
-	<insert id="insert">
+	<insert id="insert" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
 		insert into user(email,password,role) values(#{email},#{password},#{role})
 	</insert>
 	

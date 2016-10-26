@@ -2,24 +2,26 @@ package com.xy.controller;
 
 
 import com.xy.bean.CurrentUser;
+import com.xy.bean.UserCreateForm;
 import com.xy.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.session.web.http.HttpSessionManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -109,5 +111,33 @@ public class HomeController {
     @RequestMapping("/welcome")
     public ModelAndView welcome() {
         return new ModelAndView("home");
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = "/user/create", method = RequestMethod.GET)
+    public ModelAndView getUserCreatePage() {
+        LOGGER.debug("Getting user create form");
+        return new ModelAndView("addUser");
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
+    public ModelAndView handleUserCreateForm(@Valid @ModelAttribute("form") UserCreateForm form, BindingResult bindingResult) {
+        LOGGER.debug("Processing user create form={}, bindingResult={}", form, bindingResult);
+        if (bindingResult.hasErrors()) {
+            // failed validation
+            return new ModelAndView("addUser");
+        }
+        try {
+            userService.create(form);
+        } catch (DataIntegrityViolationException e) {
+            // probably email already exists - very rare case when multiple admins are adding same user
+            // at the same time and form validation has passed for more than one of them.
+            LOGGER.warn("Exception occurred when trying to save the user, assuming duplicate email", e);
+            bindingResult.reject("email.exists", "Email already exists");
+            return new ModelAndView("user_create");
+        }
+        // ok, redirect
+        return new ModelAndView("redirect:/users");
     }
 }
