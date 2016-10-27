@@ -3,6 +3,7 @@ package com.xy.controller;
 
 import com.xy.bean.CurrentUser;
 import com.xy.bean.UserCreateForm;
+import com.xy.bean.validator.UserCreateFormValidator;
 import com.xy.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.session.web.http.HttpSessionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,7 +37,15 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserCreateFormValidator userCreateFormValidator;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+
+    @InitBinder()
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(userCreateFormValidator);
+    }
 
     @RequestMapping("/")
     public ModelAndView home(HttpServletRequest request){

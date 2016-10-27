@@ -5,12 +5,14 @@ import com.xy.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
  * Created by XiuYang on 2016/10/26.
  */
+@Component
 public class UserCreateFormValidator implements Validator {
 
     @Autowired
