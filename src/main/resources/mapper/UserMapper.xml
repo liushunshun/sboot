@@ -3,14 +3,14 @@
 <mapper namespace="com.xy.mapper.UserMapper">
 	
 	<resultMap type="com.xy.bean.User" id="userMap">
-		<result property="id" column="id" />
+		<id property="id" column="id" />
 		<result property="email" column="email" />
 		<result property="password" column="password" />
 		<result property="role" column="role" />
 	</resultMap>
 	
-	<insert id="insert" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
-		insert into user(email,password,role) values(#{email},#{password},#{role})
+	<insert id="insert" parameterType="com.xy.bean.User" keyColumn="id" keyProperty="id">
+		insert into user(id,email,password,role) values(#{id},#{email},#{password},#{role})
 	</insert>
 	
 </mapper>
