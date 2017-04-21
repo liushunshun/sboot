@@ -37,15 +37,15 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserCreateFormValidator userCreateFormValidator;
+//    @Autowired
+//    private UserCreateFormValidator userCreateFormValidator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
-    @InitBinder()
-    public void initBinder(WebDataBinder binder) {
-        binder.addValidators(userCreateFormValidator);
-    }
+//    @InitBinder()
+//    public void initBinder(WebDataBinder binder) {
+//        binder.addValidators(userCreateFormValidator);
+//    }
 
     @RequestMapping("/")
     public ModelAndView home(HttpServletRequest request){
@@ -102,8 +102,9 @@ public class HomeController {
          */
         Map< String, String > sessionIds = sessionManager.getSessionIds(request);
 
-
+        LOGGER.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         return new ModelAndView("home","currentUser",user);
+        
     }
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView getLoginPage(@RequestParam Optional<String> error) {

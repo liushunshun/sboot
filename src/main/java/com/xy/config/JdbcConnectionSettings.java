@@ -21,6 +21,8 @@ public class JdbcConnectionSettings {
     private Boolean testWhileIdle = true;
     private long timeBetweenEvictionRunsMillis = 60000;
     private long minEvictableIdleTimeMillis = -1;
+    private String filters;
+    private String connectionProperties;
 
 
     public String getDriver() {
@@ -160,6 +162,22 @@ public class JdbcConnectionSettings {
 
     public void setMinEvictableIdleTimeMillis( long minEvictableIdleTimeMillis ) {
         this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
+    }
+
+    public String getFilters() {
+        return filters;
+    }
+
+    public void setFilters(String filters) {
+        this.filters = filters;
+    }
+
+    public String getConnectionProperties() {
+        return connectionProperties;
+    }
+
+    public void setConnectionProperties(String connectionProperties) {
+        this.connectionProperties = connectionProperties;
     }
 
 }

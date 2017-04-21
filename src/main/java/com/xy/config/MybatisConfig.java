@@ -1,5 +1,6 @@
 package com.xy.config;
 
+import com.alibaba.druid.filter.logging.Slf4jLogFilter;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -19,6 +20,8 @@ import org.springframework.util.ClassUtils;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
  * Created by XiuYang on 2016/10/26.
@@ -32,7 +35,7 @@ public class MybatisConfig {
     private JdbcConnectionSettings jdbcConnectionSettings;
 
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() throws SQLException{
         DruidDataSource ds = new DruidDataSource();
         ds.setDriverClassName(jdbcConnectionSettings.getDriver());
         ds.setUsername(jdbcConnectionSettings.getUsername());
@@ -45,6 +48,13 @@ public class MybatisConfig {
         ds.setTestWhileIdle(jdbcConnectionSettings.getTestWhileIdle());
         ds.setTimeBetweenEvictionRunsMillis(jdbcConnectionSettings.getTimeBetweenEvictionRunsMillis());
         ds.setMinEvictableIdleTimeMillis(jdbcConnectionSettings.getMinEvictableIdleTimeMillis());
+        ds.setFilters(jdbcConnectionSettings.getFilters());
+        Slf4jLogFilter filter = new Slf4jLogFilter();
+        filter.setConnectionLogEnabled(true);
+        filter.setStatementLogEnabled(true);
+        filter.setResultSetLogEnabled(true);
+        filter.setStatementExecutableSqlLogEnable(true);
+        ds.setProxyFilters(Arrays.asList(filter));
         return ds;
     }
 
@@ -67,7 +77,7 @@ public class MybatisConfig {
     }
 
     @Bean
-    public DataSourceTransactionManager transactionManager() {
+    public DataSourceTransactionManager transactionManager() throws SQLException {
         log.debug("> transactionManager");
         return new DataSourceTransactionManager(dataSource());
     }

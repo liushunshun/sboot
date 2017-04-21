@@ -47,4 +47,7 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
         return user;
     }
+    public static void main(String[] args) {
+        System.out.println(new BCryptPasswordEncoder().encode("demo"));
+    }
 }
